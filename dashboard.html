@@ -86,11 +86,12 @@
       <div class="my-0 p-0">
           <div id="navBar" class="head headTransparent px-0">
             <div class="position-relative align-items-center">
-              <div class="back-arrow position-absolute text-white">
+              <!-- <div class="back-arrow position-absolute text-white">
                 <i class="bi bi-chevron-left"></i>
-              </div>
-               <div class="head-sm text-center text-white">
-                <h4 class="fs-5">Event Details</h4>
+              </div> -->
+               <div class="head-sm text-center text-white" style="display: flex; justify-content: space-between; align-items: center; padding: 0px 40px;">
+                <h4>Event Details</h4>
+                <a href="create-ticket.html" class="btn btn-primary">Create Ticket</a>
                </div> 
             </div>
           </div>
@@ -98,7 +99,7 @@
     </nav>
     
     <!--Header Section for tablet screens-->
-    <nav id="display-md" class="navbar navbar-dark navbar-expand-lg bg-body-tertiary py-0">
+    <!-- <nav id="display-md" class="navbar navbar-dark navbar-expand-lg bg-body-tertiary py-0">
       <div id="navBar" class="head px-0">
         <div class="container-fluid">
           <div class="d-flex">
@@ -162,7 +163,7 @@
           </div>
         </div>
       </div>
-    </nav>
+    </nav> -->
     
     <!--Main body-->
     <section>
@@ -235,6 +236,9 @@
                   </div>
                 </div>
               </div>
+
+              <div id="allTickets"></div>
+
               <div id="action" class="mb-5">
                 <div class="card">
                   <div id="card-head" class="card-header p-0 m-0" style="background-color: rgb(255, 255, 255);">
@@ -529,18 +533,45 @@
 
     <script src="./js/js/checkIfLoggedIn.js"></script>
     <script src="./js/js/allHelpers.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script>
 
-        async function loadAllUserTickets() {
-            const tickets = await helpers.get(ticketsRoute(localStorage.getItem(role)));
-            console.log(tickets);
-            // renderTickets(tickets);
+        const allTickets = document.getElementById("allTickets");
+        
+        const loginDetails = check();
+
+        function renderTickets(input) {
+            allTickets.innerHTML = "";
+            input.forEach(ticket => {
+                allTickets.innerHTML += `
+                <div class="card card-tickets mb-5">
+                <div class="card-body">
+                    <h4 class="card-title"> <i class="bi bi-ticket"></i>${ticket.ticketName}</h4>                    
+                    <div class="d-flex" style="flex-direction: column">
+                      <p class="ms-2">${ticket.ticketDescription}</p>
+                      <p class="ms-2">Ticket Owner: ${ticket.email}</p>
+                    </div>
+                    <div class="d-flex" style="flex-direction: column">
+                      <p class="ms-2">Time and Date: ${moment(ticket.eventTimeAndDate).format("LLLL")}</p>
+                      <p class="ms-2">Venue: ${ticket.eventLocation}</p>
+                      <a href="transfer-ticket.html?ticketid=${ticket._id}" class="btn btn-primary">Transfer ticket</a>
+                    </div>                    
+                  </div>
+                </div>
+                </div>
+                `;
+            });
         }
 
-        const loginDetails = check();
-        (function() {
-            loadAllUserTickets();
-        })();
+        async function loadAllUserTickets() {
+            const tickets = await helpers.get(ticketsRoute(localStorage.getItem("role")), true);
+            if(tickets.status == 200) {
+                renderTickets(tickets.data);
+                console.log(tickets);
+            }
+        }
+
+        loadAllUserTickets();
     </script>
 
 </body>

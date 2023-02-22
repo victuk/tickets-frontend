@@ -1,9 +1,9 @@
 const check = () => {
-    if(localStorage.getItem(accesstoken)) {
+    if(localStorage.getItem("accesstoken") != null) {
         return {
             loggedIn: true,
-            accesstoken: `Bearer ${localStorage.getItem(accesstoken)}`,
-            role: localStorage.getItem(role)
+            accesstoken: `Bearer ${localStorage.getItem("accesstoken")}`,
+            role: localStorage.getItem("role")
         };
     } else {
 

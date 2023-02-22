@@ -16,7 +16,7 @@ function ticketsRoute(userType, id = "") {
 
 function securedRequest(securedReq) {
     if(securedReq == true) {
-        return "Bearer " + localStorage.getItem(accesstoken);
+        return "Bearer " + localStorage.getItem("accesstoken");
     } else {
         return null
     }
@@ -28,7 +28,7 @@ function handleError(error, errorMessage) {
 }
 
 const helpers = {
-    post: async function(url, body, isSecured) {
+    post: async function(url, body, isSecured, dataType = "json") {
         try {
             const res = await fetch(url, {
                 method: 'POST',
@@ -38,7 +38,12 @@ const helpers = {
                 },
                 body: JSON.stringify(body)
             });
-            const data = await res.json();
+            let data
+            if(dataType == "json") {
+                data = await res.json();
+            } else if(dataType == "text") {
+                data = await res.text();
+            }
             return {
                 status: res.status,
                 statusText: res.statusText,
@@ -48,13 +53,21 @@ const helpers = {
             handleError(error, "Client Side Error!");
         }
     },
-    get: async function(url, isSecured) {
+    get: async function(url, isSecured, dataType="json") {
+        console.log(securedRequest(isSecured));
         try {
             const res = await fetch(url, {
                 method: 'GET',
-                accesstoken: securedRequest(isSecured)
+                headers:{
+                    accesstoken: securedRequest(isSecured)
+                }
             });
-            const data = await res.json();
+            let data;
+            if(dataType == "json") {
+                data = await res.json();
+            } else if(dataType == "text") {
+                data = await res.text();
+            }
             return {
                 status: res.status,
                 statusText: res.statusText,
@@ -64,17 +77,22 @@ const helpers = {
             handleError(error, "Client Side Error!");
         }
     },
-    put: async function(url, body, isSecured) {
+    put: async function(url, body, isSecured, dataType="json") {
         try {
             const res = await fetch(url, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     accesstoken: securedRequest(isSecured)
                 },
                 body: JSON.stringify(body)
             });
-            const data = await res.json();
+            let data;
+            if(dataType == "json") {
+                data = await res.json();
+            } else if(dataType == "text") {
+                data = await res.text();
+            }
             return {
                 status: res.status,
                 statusText: res.statusText,
@@ -84,17 +102,21 @@ const helpers = {
             handleError(error, "Client Side Error!");
         }
     },
-    delete: async function(url, isSecured) {
+    delete: async function(url, isSecured, dataType="json") {
         try {
             const res = await fetch(url, {
-                method: 'POST',
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     accesstoken: securedRequest(isSecured)
-                },
-                body: JSON.stringify(body)
+                }
             });
-            const data = await res.json();
+            let data;
+            if(dataType == "json") {
+                data = await res.json();
+            } else if(dataType == "text") {
+                data = await res.text();
+            }
             return {
                 status: res.status,
                 statusText: res.statusText,
