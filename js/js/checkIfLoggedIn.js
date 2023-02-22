@@ -18,3 +18,16 @@ const check = () => {
         };
     }
 }
+
+const forAdminsOnly = document.getElementById("admins-only");
+
+function checkForAdminFeatures(){
+    if(localStorage.getItem("role") == "user") {
+        if(forAdminsOnly == null) {
+            return;
+        }
+        forAdminsOnly.style.display = "none";
+    }
+}
+
+checkForAdminFeatures();
