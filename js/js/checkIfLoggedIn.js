@@ -26,8 +26,14 @@ function checkForAdminFeatures(){
         if(forAdminsOnly == null) {
             return;
         }
-        forAdminsOnly.style.display = "none";
+        forAdminsOnly.style.display = "none!important";
     }
 }
 
 checkForAdminFeatures();
+
+function logOut() {
+    localStorage.removeItem("accesstoken");
+    localStorage.removeItem("role");
+    location.assign("/login.html");
+}
