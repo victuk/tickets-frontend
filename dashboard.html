@@ -24,21 +24,20 @@
     <section>
       <div class="container">
         
-        <!--Page Navigation-->
+        
         <div id="breadcrumb" style="margin-top: 2rem;">
           <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="account-overview.html">My Account</a></li>
-              <li class="breadcrumb-item"><a href="#">My Events</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Event Details</li>
+              <li class="breadcrumb-item active"><a href="#">My Events</a></li>
             </ol>
           </nav>
         </div>
 
         <div id="event-details">
           <div id="hide" class="mb-4"><h1 class="fs-4 header">Event Details</h1></div>
-          <div class="d-flex d-flex-sm justify-content-between">
-            <div id="d-small" style="width: 30%;">
+          <div class="d-flex d-flex-sm" style="margin: 0px auto; justify-content: center;">
+            <!-- <div id="d-small" style="width: 30%;">
               <div>
                 <div class="card">
                   <img src="img/morgan wallen.jpg" class="card-img-top" alt="Morgan Wallen">
@@ -78,7 +77,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="mb-5 w-22" style="width: 66%;">
               <div id="tickets">
                 <div class="card card-tickets mb-5">
@@ -94,7 +93,7 @@
 
               <div id="allTickets"></div>
 
-              <div id="action" class="mb-5">
+              <!-- <div id="action" class="mb-5">
                 <div class="card">
                   <div id="card-head" class="card-header p-0 m-0" style="background-color: rgb(255, 255, 255);">
                     <ul class="nav nav-pills card-header-pills position-relative">
@@ -134,8 +133,8 @@
                     </p>                    
                   </div>
                 </div>
-              </div>
-              <div id="sponsors" class="mb-5">
+              </div> -->
+              <!-- <div id="sponsors" class="mb-5">
                 <div class="card px-4 pt-3">
                   <div class="card-body">
                     <h5 class="card-title mb-4">An Exclusive Offer From Our Sponsors</h5>
@@ -188,7 +187,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -397,25 +396,20 @@
 
         function renderTickets(input) {
             allTickets.innerHTML = "";
+            console.log(input);
             input.forEach(ticket => {
                 allTickets.innerHTML += `
                 <div class="card card-tickets mb-5">
                 <div class="card-body">
                     <div style="display: flex; align-items: center; justify-content: space-between;">
-                        <h4 class="card-title" style="margin: 0px;">${ticket.ticketName} (${ticket.eventLocation})</h4>
-                        <div style="color: white; background-color: blue; display: inline-block; border-radius: 20px; padding: 2px 10px;" >${ticket.email}</div>
+                        <h4 class="card-title" style="margin: 0px;"><a href="transfer-ticket.html?ticketid=${ticket.ticket._id}">${ticket.ticket.ticketName} (${ticket.ticket.eventLocation})</a></h4>
+                        <div>${ticket.expiredState == "expired" ? "Expired" : "Valid"}</div>
                     </div>
-                    <div class="py-2" style="border-bottom: 1px solid black;">${moment(ticket.eventTimeAndDate).format("LLLL")} </div>                   
-                    
-                    <div class="d-flex" style="flex-direction: column">
-                      <h5 class="ms-2 my-4">${ticket.ticketDescription}</h5>
-                    </div>
-                    <div class="d-flex" style="flex-direction: column">
+                    <div class="py-2" style="display: flex; justify-content: space-between; align-items-center;">
+                      <div>${moment(ticket.ticket.eventTimeAndDate).format("LLLL")}</div>
+                      <div style="color: white; background-color: blue; display: inline-block; border-radius: 20px; padding: 2px 10px;" >${ticket.ticket.email}</div>
                       
-                      <img src="${ticket.flyer}" class="flyerimage" />
-                      <a href="transfer-ticket.html?ticketid=${ticket._id}" class="btn btn-primary">Transfer ticket</a>
-                      <button onclick="deleteTicket('${ticket._id}')" class="btn btn-danger mt-4" style="background-color: red; display: ${localStorage.getItem("role") == "admin" ? "block" : "none"}">Delete</button>
-                    </div>                    
+                    </div>          
                   </div>
                 </div>
                 </div>

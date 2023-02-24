@@ -1,5 +1,5 @@
-// const baseUrl = "http://localhost:5000/v1/";
-const baseUrl = "https://ticket-backend-ki4u.onrender.com/v1/";
+const baseUrl = "http://localhost:5000/v1/";
+// const baseUrl = "https://ticket-backend-ki4u.onrender.com/v1/";
 
 const auth = {
     login: `${baseUrl}auth/login`,

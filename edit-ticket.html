@@ -168,7 +168,6 @@
     
     <!--Main body-->
     <div style="display: flex; flex-direction: column; width: 60%; row-gap: 20px; margin: 40px auto;">
-      <input type="text" class="form-control" name="ticket-owner" id="ticket-owner" placeholder="Ticket Owner">
       <input type="text" class="form-control" id="ticket-name" placeholder="Ticket Name" />
       <textarea name="ticket-description" class="form-control" id="ticket-description" cols="30" rows="10" placeholder="Ticket Description"></textarea>
       <input type="file" id="flyer" accept=".jpg, .jpeg, .png">
@@ -189,13 +188,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
     <script src="js/app.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="./js/js/checkIfLoggedIn.js"></script>
     <script src="./js/js/allHelpers.js"></script>
     <script src="./js/js/header-after-login.js"></script>
     <script>
-
-      const ticketOwner = document.getElementById("ticket-owner");
       const ticketName = document.getElementById("ticket-name");
       const ticketDescription = document.getElementById("ticket-description");
       const flyer = document.getElementById("flyer");
@@ -209,7 +206,9 @@
       const seats = document.getElementById("seats");
 
       document.getElementById("submitbutton").addEventListener("click", submitTicket);
-      
+
+      const id = location.search.split("=")[1];
+
       let seatSettings = [];
 
       function renderSeats() {
@@ -252,6 +251,23 @@
         renderSeats();
       }
 
+      async function getTicket() {
+        const result = await helpers.get(ticketsRoute(localStorage.getItem("role"), id), true);
+        console.log(result);
+        ticketName.value = result.data.ticket.ticketName;
+        ticketDescription.value = result.data.ticket.ticketDescription;
+        // numberOfTickets.value = result.data.ticket.numberOfTickets;
+        timeAndDate.value = moment(result.data.ticket.eventTimeAndDate).format("YYYY-MM-DD HH:mm");
+        expiryDate.value = moment(result.data.ticket.expiryDate).format("YYYY-MM-DD HH:mm")
+        eventLocation.value = result.data.ticket.eventLocation;
+        seatSettings = result.data.ticket.numberOfTickets;
+
+        renderSeats();
+
+      }
+
+      getTicket();
+
       async function submitTicket() {
 
         const formdata = new FormData();
@@ -266,8 +282,7 @@
           
           const pic = await imgDetails.json();
 
-        const response = await helpers.post(baseUrl + localStorage.getItem("role") + "/ticket", {
-          email: ticketOwner.value,
+        const response = await helpers.put(baseUrl + localStorage.getItem("role") + "/ticketbody/" + id, {
           ticketName: ticketName.value,
           ticketDescription: ticketDescription.value,
           flyer: pic.secure_url,
@@ -278,7 +293,8 @@
         }, true, "text");
 
         if(response.status == 200) {
-          alert("Ticket created Successfully");
+          alert("Ticket edited Successfully!");
+          location.assign("/transfer-ticket.html?ticketid=" + id);
         }
       }
 

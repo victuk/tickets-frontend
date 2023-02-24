@@ -8,7 +8,7 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-    <!-- <link rel="stylesheet" href="css/sign-in.css"> -->
+    <link rel="stylesheet" href="css/sign-in.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="apple-touch-icon" href="//s1.s.tmol.io/static/favicon-tm.ico">
     <link rel="icon" type="image/x-icon" href="//s1.s.tmol.io/static/favicon-tm.ico">
@@ -160,7 +160,7 @@
               </div>
             </div>
             <div class="mb-5 w-22" style="width: 66%;">
-              <div id="tickets">
+              <!-- <div id="tickets">
                 <div class="card card-tickets mb-5">
                   <div class="card-body">
                     <h5 class="card-title" style="color: #904eba;">When you can get your tickets</h5>                    
@@ -170,7 +170,7 @@
                     </div>                    
                   </div>
                 </div>
-              </div>
+              </div> -->
 
               <div id="allTickets"></div>
 
@@ -181,7 +181,7 @@
                       <li class="nav-item">
                         <div class="border-end text-center">
                           <i class="bi bi-send"></i>
-                          <a class="nav-link" href="#">Transfer Tickets</a>
+                          <button class="nav-link" onclick="transferTicket()">Transfer Tickets</button>
                         </div>
                       </li>
                       <li class="nav-item">
@@ -205,8 +205,8 @@
                       </span>
                     </div>
                     <div id="card-sm" class="card mb-5">
-                      <div class="card-body">
-                        Sec 126, Row 26, Seat 27
+                      <div class="card-body" id="numberOfTickets">
+                        None
                       </div>
                     </div>
                     <p class="card-text my-3">Can't find something you've purchased? Check your order confirmation email or 
@@ -472,13 +472,16 @@
     <script>
 
       const id = location.search.split("=")[1];
-      console.log(id);
-
+      
+      function transferTicket() {
+        location.assign("/transfer-ticket.html?ticketid=" + id);
+      }
         const allTickets = document.getElementById("allTickets");
         
         const loginDetails = check();
 
         function renderTickets(input) {
+          console.log(input);
             allTickets.innerHTML = "";
             input.forEach(ticket => {
                 allTickets.innerHTML += `
@@ -511,6 +514,7 @@
         const venue = document.getElementById("ticket-venue");
         const description = document.getElementById("ticket-description");
         const flyer = document.getElementById("flyer");
+        const numberOfTickets = document.getElementById("numberOfTickets");
 
         async function deleteTicket(ticketid) {
             const response = helpers.delete(ticketsRoute(localStorage.getItem("role"), ticketid));
@@ -522,17 +526,24 @@
 
         async function loadOneTicket() {
             const ticket = await helpers.get(ticketsRoute(localStorage.getItem("role"), id), true);
+            console.log(ticket);
 
-            title.innerText = ticket.data.ticketName;
-            time.innerText = moment(ticket.data.eventTimeAndDate).format("LLLL");
-            venue.innerText = ticket.data.eventLocation;
-            flyer.src = ticket.data.flyer;
-            description.innerText = ticket.data.ticketDescription;
+            title.innerText = ticket.data.ticket.ticketName;
+            time.innerText = moment(ticket.data.ticket.eventTimeAndDate).format("LLLL");
+            venue.innerText = ticket.data.ticket.eventLocation;
+            flyer.src = ticket.data.ticket.flyer;
+            description.innerText = ticket.data.ticket.ticketDescription;
+            if(ticket.data.ticket.numberOfTickets.length == 0) {
+              numberOfTickets.innerText = "No ticket registered.";
+            } else {
+              numberOfTickets.innerHTML = "";
+              numberOfTickets.innerHTML = ticket.data.ticket.numberOfTickets.map((t, index) => {
+                return `<div>(${index + 1}.) Sec ${t.sSection} Row ${t.sRow}, Seat ${t.sNumber}</div>`;
+              });
+            }
 
-            // if(tickets.status == 200) {
-            //     renderTickets(tickets.data);
-            //     console.log(tickets);
-            // }
+            const res = await helpers.put(baseUrl + localStorage.getItem("role") + "/updateview/" + id, {}, true, "text");
+            console.log(res);
         }
 
         loadOneTicket();
