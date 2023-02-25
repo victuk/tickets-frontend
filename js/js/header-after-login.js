@@ -26,9 +26,9 @@ async function loadThis() {
              <a class="nav-link active" aria-current="page" href="#">Concerts</a>
            </li>
            <li class="nav-item">
-             <a class="nav-link" href="#">Sports</a>
+             <a class="nav-link" href="dashboard.html">Home</a>
            </li>                        
-           <li class="nav-item">
+           <!-- <li class="nav-item">
              <a class="nav-link" href="">Arts & Theater</a>
            </li>
            <li class="nav-item">
@@ -36,9 +36,9 @@ async function loadThis() {
            </li>
            <li class="nav-item">
              <a class="nav-link" href="">VIP</a>
-           </li>
+           </li> -->
            <li class="nav-item">
-             <a class="nav-link" href="">Deals</a>
+             <a class="nav-link" href="create-ticket.html">Create Ticket</a>
            </li>
          </ul>            
        </div>                   
@@ -51,12 +51,12 @@ async function loadThis() {
            </a>
            <ul class="dropdown-menu dropdown-content">
              <li><a class="dropdown-item" href="#">My Account</a></li>
-             <li><a class="dropdown-item" href="#">My Tickets</a></li>
+             <!-- <li><a class="dropdown-item" href="#">My Tickets</a></li>
              <li><a class="dropdown-item" href="#">My Listings</a></li>
              <li><a class="dropdown-item" href="#">Settings</a></li>
              <li><a class="dropdown-item" href="#">Sell</a></li>
-             <li><a class="dropdown-item" href="#">Learn About Verified Tickets</a></li>
-             <li><a class="dropdown-item" href="#">Sign Out</a></li>
+             <li><a class="dropdown-item" href="#">Learn About Verified Tickets</a></li> -->
+             <li><button class="dropdown-item" onclick="logOut()">Sign Out</button></li>
            </ul>
          </li>
          <li class="nav-item">
